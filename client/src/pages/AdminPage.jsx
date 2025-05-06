@@ -97,7 +97,7 @@ const AdminPage = () => {
   };
 
   const handleCancel = () => {
-    setFormData({ title: "", content: "", author: "", category: "", url: "" });
+    setFormData({ title: "", content: "", author: "", category: "", source_url: "" });
     setEditingId(null);
     // setError(null);
   };
