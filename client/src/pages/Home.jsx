@@ -23,8 +23,9 @@ const HomePage = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await axiosInstance.get("/articles");
-        const data = await response.json();
+        const response = await axiosInstance.get("/articles/");
+        const data  = response.data;
+        console.log(data);
         const fetched = Array.isArray(data) ? data : data.articles;
         const articleData = fetched ?? [];
 
