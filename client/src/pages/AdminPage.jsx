@@ -2,18 +2,19 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { PenLine, Trash2, Plus, X, Loader, FileText } from "lucide-react";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"
-import {axiosInstance} from "../configs/axios";
+import "react-toastify/dist/ReactToastify.css";
+import { axiosInstance } from "../configs/axios";
 
 const AdminPage = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
     author: "",
     category: "",
+    source_url: "",
   });
   const [editingId, setEditingId] = useState(null);
 
@@ -27,7 +28,7 @@ const AdminPage = () => {
       setArticles(response.data);
       setLoading(false);
     } catch (err) {
-      setError("Failed to fetch articles. Please try again later.");
+      // setError("Failed to fetch articles. Please try again later.");
       toast.error("Failed to fetch articles. Please try again later.");
       setLoading(false);
     }
@@ -46,22 +47,25 @@ const AdminPage = () => {
 
     try {
       if (editingId) {
-        await axiosInstance.put(
-          `/admin/articles/${editingId}`,
-          formData
-        );
+        await axiosInstance.put(`/admin/articles/${editingId}`, formData);
         toast.success("Article updated successfully!");
       } else {
         await axiosInstance.post("/admin/articles", formData);
         toast.success("Article created successfully!");
       }
 
-      setFormData({ title: "", content: "", author: "", category: "" });
+      setFormData({
+        title: "",
+        content: "",
+        author: "",
+        category: "",
+        source_url: "",
+      });
       setEditingId(null);
       fetchArticles();
     } catch (err) {
       toast.error("Failed to save article. Please try again.");
-      setError("Failed to save article. Please try again.");
+      // setError("Failed to save article. Please try again.");
       console.error(err);
     }
   };
@@ -72,8 +76,9 @@ const AdminPage = () => {
       content: article.content,
       author: article.author,
       category: article.category,
+      source_url: article.source_url,
     });
-    setEditingId(article.id);
+    setEditingId(article._id);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -85,42 +90,32 @@ const AdminPage = () => {
         toast.success("Article deleted successfully!");
       } catch (err) {
         toast.error("Failed to delete article. Please try again.");
-        setError("Failed to delete article. Please try again.");
+        // setError("Failed to delete article. Please try again.");
         console.error(err);
       }
     }
   };
 
   const handleCancel = () => {
-    setFormData({ title: "", content: "", author: "", category: "" });
+    setFormData({ title: "", content: "", author: "", category: "", url: "" });
     setEditingId(null);
-    setError(null);
+    // setError(null);
   };
 
   return (
     <div className="min-h-screen mt-16 bg-base-100 p-6">
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      
       <div className="container mx-auto max-w-4xl">
         <div className="flex flex-col items-center gap-2 group mb-8">
           <div className="size-14 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20">
             <FileText className="size-8 text-primary" />
           </div>
           <h1 className="text-2xl font-bold mt-2">Article Management</h1>
-          <p className="text-base-content/60">Create and manage your articles</p>
+          <p className="text-base-content/60">
+            Create and manage your articles
+          </p>
         </div>
 
-        {error && (
+        {/* {error && (
           <div className="alert alert-error mb-6 shadow-lg">
             <div>
               <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
@@ -129,7 +124,7 @@ const AdminPage = () => {
               <span>{error}</span>
             </div>
           </div>
-        )}
+        )} */}
 
         <div className="card bg-base-200 shadow-xl mb-8">
           <div className="card-body">
@@ -174,6 +169,20 @@ const AdminPage = () => {
                   rows="6"
                   required
                 ></textarea>
+              </div>
+
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Source Url</span>
+                </label>
+                <input
+                  type="text"
+                  name="source_url"
+                  value={formData.source_url}
+                  onChange={handleInputChange}
+                  className="input input-bordered w-full"
+                  required
+                />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -225,10 +234,7 @@ const AdminPage = () => {
                     Cancel
                   </button>
                 )}
-                <button
-                  type="submit"
-                  className="btn btn-primary gap-2"
-                >
+                <button type="submit" className="btn btn-primary gap-2">
                   {editingId ? (
                     <>
                       <PenLine className="size-4" />
@@ -256,13 +262,25 @@ const AdminPage = () => {
         {loading ? (
           <div className="flex justify-center items-center p-12">
             <Loader className="size-8 text-primary animate-spin" />
-            <span className="ml-3 text-base-content/60">Loading articles...</span>
+            <span className="ml-3 text-base-content/60">
+              Loading articles...
+            </span>
           </div>
         ) : articles.length === 0 ? (
           <div className="alert alert-info shadow-lg">
             <div>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-current flex-shrink-0 w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                className="stroke-current flex-shrink-0 w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
               </svg>
               <span>No articles found. Create your first article above.</span>
             </div>
@@ -270,7 +288,10 @@ const AdminPage = () => {
         ) : (
           <div className="grid grid-cols-1 gap-6">
             {articles.map((article) => (
-              <div key={article.id} className="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow">
+              <div
+                key={article.id}
+                className="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow"
+              >
                 <div className="card-body">
                   <h3 className="card-title text-lg">{article.title}</h3>
                   <div className="flex items-center gap-2 text-base-content/60 text-sm">
@@ -281,7 +302,9 @@ const AdminPage = () => {
                   </div>
                   <p className="mt-2 text-base-content/80">
                     {article.content && article.content.length > 0
-                      ? `${article.content.substring(0, 150)}${article.content.length > 150 ? '...' : ''}`
+                      ? `${article.content.substring(0, 150)}${
+                          article.content.length > 150 ? "..." : ""
+                        }`
                       : "No content available."}
                   </p>
 
@@ -294,7 +317,7 @@ const AdminPage = () => {
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(article.id)}
+                      onClick={() => handleDelete(article._id)}
                       className="btn btn-error btn-sm gap-2"
                     >
                       <Trash2 className="size-4" />

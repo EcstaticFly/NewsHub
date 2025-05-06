@@ -1,16 +1,16 @@
-import React from 'react';
-import { Calendar, User, Bookmark, ChevronRight } from 'lucide-react';
+import React from "react";
+import { Calendar, User, Bookmark, ChevronRight } from "lucide-react";
 
 const ArticleCard = ({ article }) => {
   const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   const getExcerpt = (content, maxLength = 150) => {
-    if (!content) return '';
+    if (!content) return "";
     if (content.length <= maxLength) return content;
-    return content.substr(0, content.lastIndexOf(' ', maxLength)) + '...';
+    return content.substr(0, content.lastIndexOf(" ", maxLength)) + "...";
   };
 
   return (
@@ -40,7 +40,7 @@ const ArticleCard = ({ article }) => {
               <Bookmark className="h-5 w-5 text-gray-400 hover:text-blue-500" />
             </button>
             <a
-              href={`/articles/${article.id}`}
+              href={`/article/${article._id}`}
               className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Read

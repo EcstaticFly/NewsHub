@@ -52,7 +52,7 @@ const ArticlePage = () => {
 
   if (error || !article) {
     return (
-      <div className="bg-error/10 border min-h-screen border-error text-error px-4 py-3 rounded relative" role="alert">
+      <div className="bg-error/10 mt-16 border min-h-screen border-error text-error px-4 py-3 rounded relative" role="alert">
         <strong className="font-bold">Error!</strong>
         <span className="block sm:inline"> {error || 'Article not found'}</span>
         <div className="mt-4">

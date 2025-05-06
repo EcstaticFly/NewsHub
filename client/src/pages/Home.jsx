@@ -198,7 +198,7 @@ const HomePage = () => {
                         {getExcerpt(article.content, 150)}
                       </p>
                       <button
-                        onClick={() => handleArticleClick(article.id)}
+                        onClick={() => handleArticleClick(article._id)}
                         className="btn btn-primary"
                       >
                         Read Full Article
@@ -237,7 +237,7 @@ const HomePage = () => {
       )}
 
       <main className="container mx-auto px-4 sm:px-6 py-6">
-        \
+      
         <div className="mb-8 z-10 bg-base-100 rounded-lg shadow-sm p-4">
           <h3 className="text-base font-medium mb-3 text-base-content/80">
             Filter by Category
@@ -291,7 +291,7 @@ const HomePage = () => {
                       <Bookmark className="size-5 text-base-content/40 hover:text-primary" />
                     </button>
                     <button
-                      onClick={() => handleArticleClick(article.id)}
+                      onClick={() => handleArticleClick(article._id)}
                       className="btn btn-primary btn-sm"
                     >
                       Read

@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const path = require('path');
 const articleRoutes = require('./routes/articleRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const connectDB = require('./config/db');
 
 
 dotenv.config();
@@ -34,4 +35,5 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  connectDB();
 });

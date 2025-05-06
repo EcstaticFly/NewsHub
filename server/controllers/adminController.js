@@ -1,131 +1,75 @@
-const fs = require('fs');
-const path = require('path');
-const { constrainedMemory } = require('process');
+const Article = require("../models/article");
 
-const articlesFilePath = path.join(__dirname, '../data/articles.json');
-
-const getArticlesData = () => {
+exports.getAdminArticles = async (req, res) => {
+  console.log("Fetching all articles for admin...");
   try {
-    const data = fs.readFileSync(articlesFilePath, 'utf8');
-    return JSON.parse(data);
+    const articles = await Article.find({});
+    res.json(articles);
   } catch (error) {
-    console.error('Error reading articles data:', error);
-    return [];
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-const writeArticlesData = (data) => {
+exports.createArticle = async (req, res) => {
+  console.log("Creating a new article...");
   try {
-    fs.writeFileSync(articlesFilePath, JSON.stringify(data, null, 2), 'utf8');
-    return true;
-  } catch (error) {
-    console.error('Error writing articles data:', error);
-    return false;
-  }
-};
-
-exports.getAdminArticles = (req, res) => {
-  console.log('Fetching all articles for admin...');
-  try {
-    const articles = getArticlesData();
-    const articlesList = articles.map(({ id, title, author, published_date, category, content }) => ({
-      id,
-      title,
-      author,
-      content,
-      published_date,
-      category
-    }));
-    res.json(articlesList);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
-exports.createArticle = (req, res) => {
-  try {
-    const articles = getArticlesData();
     const newArticle = req.body;
-    
+
     if (!newArticle.title || !newArticle.content) {
-      return res.status(400).json({ message: 'Title and content are required' });
+      return res
+        .status(400)
+        .json({ message: "Title and content are required" });
     }
-    
-    const newId = articles.length > 0 ? Math.max(...articles.map(a => a.id)) + 1 : 1;
-    
-    const articleToAdd = {
-      id: newId,
+
+    const article = new Article({
       title: newArticle.title,
       content: newArticle.content,
-      author: newArticle.author || 'Unknown',
-      published_date: newArticle.published_date || new Date().toISOString().split('T')[0],
-      category: newArticle.category || 'Uncategorized',
-      source_url: newArticle.source_url || `https://example.com/news/article-${newId}`
-    };
-    
-    articles.push(articleToAdd);
-    
-    if (writeArticlesData(articles)) {
-      res.status(201).json(articleToAdd);
-    } else {
-      res.status(500).json({ message: 'Error saving article' });
-    }
+      author: newArticle.author || "Unknown",
+      published_date: newArticle.published_date || new Date(),
+      category: newArticle.category || "Uncategorized",
+      source_url: newArticle.source_url,
+    });
+
+    const savedArticle = await article.save();
+    res.status(201).json(savedArticle);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-
-exports.updateArticle = (req, res) => {
-  console.log("Hey");
+exports.updateArticle = async (req, res) => {
+  console.log("Updating article with ID:", req.params.id);
   try {
-    const articles = getArticlesData();
-    const id = parseInt(req.params.id);
-    const updates = req.body;
-    
-    const articleIndex = articles.findIndex(a => a.id === id);
-    
-    if (articleIndex === -1) {
-      return res.status(404).json({ message: 'Article not found' });
+    const formData = req.body;
+    const article = await Article.findById(req.params.id);
+    if (!article) {
+      return res.status(404).json({ message: "Article not found" });
     }
-    
-    const updatedArticle = {
-      ...articles[articleIndex],
-      ...updates,
-      id  
-    };
-    
-    articles[articleIndex] = updatedArticle;
-    
-    if (writeArticlesData(articles)) {
-      res.json(updatedArticle);
-    } else {
-      res.status(500).json({ message: 'Error updating article' });
-    }
+
+    Object.keys(formData).forEach((key) => {
+      article[key] = formData[key];
+    });
+
+    const updatedArticle = await article.save();
+    console.log("Updated article:", updatedArticle);
+    res.json(updatedArticle);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-exports.deleteArticle = (req, res) => {
+exports.deleteArticle = async (req, res) => {
+  console.log("Deleting article with ID:", req.params.id);
   try {
-    const articles = getArticlesData();
-    const id = parseInt(req.params.id);
-    
-    const articleIndex = articles.findIndex(a => a.id === id);
-    
-    if (articleIndex === -1) {
-      return res.status(404).json({ message: 'Article not found' });
+    const article = await Article.findById(req.params.id);
+
+    if (!article) {
+      return res.status(404).json({ message: "Article not found" });
     }
-    
-    const deletedArticle = articles[articleIndex];
-    articles.splice(articleIndex, 1);
-    
-    if (writeArticlesData(articles)) {
-      res.json({ message: 'Article deleted successfully', article: deletedArticle });
-    } else {
-      res.status(500).json({ message: 'Error deleting article' });
-    }
+
+    await article.deleteOne();
+    res.json({ message: "Article deleted successfully", article });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
