@@ -1,23 +1,10 @@
 import { Code2, LogOut, Moon, RefreshCw, SunMedium, User } from "lucide-react";
 import { Link } from "react-router-dom";
-// import { authStore } from "../store/authStore";
 import { themeStore } from "../store/themeStore";
-// import { contestStore } from "../store/contestStore";
-
-const adminEmails = import.meta.env.VITE_ADMIN_EMAILS.split(",");
 
 export default function Navbar() {
-  // const { user, logout } = authStore();
   const { theme, setTheme } = themeStore();
-  // const { getAllContests, fetchBookmarks } = contestStore();
 
-  //For manual refresh(Not sure, if i should let it be or remove it)
-  // const handleRefresh = () => {
-  //   getAllContests(true); //Force refresh
-  //   if (user && user._id) {
-  //     fetchBookmarks(true); //Force refresh
-  //   }
-  // };
 
   return (
     <header
