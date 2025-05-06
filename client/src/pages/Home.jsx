@@ -9,6 +9,7 @@ import {
   ChevronLeft,
 } from "lucide-react";
 import Footer from "../components/Footer";
+import { axiosInstance } from "../configs/axios";
 
 const HomePage = () => {
   const [articles, setArticles] = useState([]);
@@ -22,12 +23,11 @@ const HomePage = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/articles");
+        const response = await axiosInstance.get("/articles");
         const data = await response.json();
         const fetched = Array.isArray(data) ? data : data.articles;
         const articleData = fetched ?? [];
 
-        // Set the 3 most recent articles as featured
         if (articleData.length > 0) {
           const sorted = [...articleData].sort(
             (a, b) => new Date(b.published_date) - new Date(a.published_date)
@@ -46,22 +46,18 @@ const HomePage = () => {
 
     fetchArticles();
   }, []);
-
-  // Auto-advance carousel
   useEffect(() => {
     const interval = setInterval(() => {
       if (featuredArticles.length > 0) {
         setCurrentSlide((prev) => (prev + 1) % featuredArticles.length);
       }
-    }, 4000); // Changed from 5000 to 4000 for slightly faster rotation
+    }, 4000); 
 
     return () => clearInterval(interval);
   }, [featuredArticles.length]);
 
-  // Update slider position when currentSlide changes with continuous rotation
   useEffect(() => {
     if (carouselRef.current && featuredArticles.length > 0) {
-      // Create a clone of the first slide at the end for smooth transition
       const isLastSlide = currentSlide === featuredArticles.length - 1;
 
       carouselRef.current.scrollTo({
@@ -69,13 +65,10 @@ const HomePage = () => {
         behavior: "smooth",
       });
 
-      // If we're at the last slide, prepare to loop back to first slide
       if (isLastSlide) {
-        // Use setTimeout to wait for animation to complete before resetting
         const timer = setTimeout(() => {
-          // Reset to first slide immediately after animation completes
           setCurrentSlide(0);
-        }, 500); // Half a second after transition starts
+        }, 500);
 
         return () => clearTimeout(timer);
       }
@@ -102,22 +95,17 @@ const HomePage = () => {
     return content.substr(0, content.lastIndexOf(" ", maxLength)) + "...";
   };
 
-  // Always move forward, even for "previous" action
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % featuredArticles.length);
   };
 
-  // For consistency, prev also moves forward (to maintain one-direction flow)
   const prevSlide = () => {
-    // Move forward to the "previous" slide (which means going to the last slide if at first)
     setCurrentSlide((prev) =>
       prev === 0 ? featuredArticles.length - 1 : prev - 1
     );
   };
 
   const handleArticleClick = (id) => {
-    // In a real implementation, you would use router navigation
-    // But for this demo, we're just logging
     console.log(`Navigating to article/${id}`);
     window.location.href = `/article/${id}`;
   };

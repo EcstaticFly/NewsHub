@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Loader } from 'lucide-react';
+import { axiosInstance } from '../configs/axios';
 
 const ArticlePage = () => {
   const { id } = useParams();
@@ -14,7 +15,7 @@ const ArticlePage = () => {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/articles/${id}`);
+        const response = await axiosInstance.get(`/articles/${id}`);
         setArticle(response.data);
         setLoading(false);
       } catch (err) {
@@ -29,7 +30,7 @@ const ArticlePage = () => {
   const handleGetSummary = async () => {
     setSummaryLoading(true);
     try {
-      const response = await axios.get(`http://localhost:5000/api/articles/${id}/summary`);
+      const response = await axiosInstance.get(`/articles/${id}/summary`);
       setSummary(response.data.summary);
     } catch (err) {
       console.error('Error fetching summary:', err);

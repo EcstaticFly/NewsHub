@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { PenLine, Trash2, Plus, X, Loader, FileText } from "lucide-react";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import "react-toastify/dist/ReactToastify.css"
+import {axiosInstance} from "../configs/axios";
 
 const AdminPage = () => {
   const [articles, setArticles] = useState([]);
@@ -22,7 +23,7 @@ const AdminPage = () => {
 
   const fetchArticles = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/admin/articles/all");
+      const response = await axiosInstance.get("/admin/articles/all");
       setArticles(response.data);
       setLoading(false);
     } catch (err) {
@@ -45,19 +46,16 @@ const AdminPage = () => {
 
     try {
       if (editingId) {
-        // Update existing article
-        await axios.put(
-          `http://localhost:5000/api/admin/articles/${editingId}`,
+        await axiosInstance.put(
+          `/admin/articles/${editingId}`,
           formData
         );
         toast.success("Article updated successfully!");
       } else {
-        // Create new article
-        await axios.post("http://localhost:5000/api/admin/articles", formData);
+        await axiosInstance.post("/admin/articles", formData);
         toast.success("Article created successfully!");
       }
 
-      // Reset form and refresh articles
       setFormData({ title: "", content: "", author: "", category: "" });
       setEditingId(null);
       fetchArticles();
@@ -82,7 +80,7 @@ const AdminPage = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this article?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/admin/articles/${id}`);
+        await axiosInstance.delete(`/admin/articles/${id}`);
         fetchArticles();
         toast.success("Article deleted successfully!");
       } catch (err) {
