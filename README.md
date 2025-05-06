@@ -1,54 +1,64 @@
-# AI-Powered News Platform
+# 🚀 NewsHub: AI-Powered News Platform
 
 This project is a full-stack web application that serves as an AI-powered news platform. It features a responsive UI for browsing news articles and uses Gemini API to generate AI summaries for each article.
 
-## Features
+## ✨ Features
 
 - Responsive frontend displaying news articles
 - Article summary generation using Gemini API
 - Admin panel for article management
 - RESTful API backend
 
-## Tech Stack
+## 🛠 Tech Stack
 
 - **Frontend**: React.js, React Router, Tailwind CSS
 - **Backend**: Node.js, Express.js
 - **AI Integration**: Google Gemini API
+- **Database**: MongoDB
 
-## Project Structure
+## 🗂️ Project Structure
 
 ```
-news-platform/
+NewsHub/
 ├── client/                  # Frontend React app
 │   ├── public/
 │   └── src/
 │       ├── components/      # Reusable UI components
+│       ├── configs/         # Configuration files
 │       ├── pages/           # Page components
-│       ├── App.js           # Main app component
-│       └── index.js         # Entry point
+│       ├── store/           # Global State Managmement(Themes)
+│       ├── App.jsx          # Main app component
+│       ├── Dockerfile       # Dockerfile for containerization
+│       ├── .env             # Environment variables(not committed)
+│       └── main.jsx         # Entry point
 ├── server/                  # Backend Node.js/Express app
+│   ├── config/              # Server configuration
 │   ├── controllers/         # Route controllers
-│   ├── routes/              # API routes
 │   ├── data/                # JSON data
+│   ├── models/              # Database models
+│   ├── routes/              # API routes
+│   ├── Dockerfile           # Dockerfile for containerization
+│   ├── .env                 # Environment variables (not committed)
 │   ├── server.js            # Server entry point
-├── .env                     # Environment variables (not committed)
+├── docker-compose           # Docker compose file for containerization
+├── LICENSE                  # License agreement
 └── README.md
 ```
 
-## Setup Instructions
+## 🧰 Setup Instructions
 
-### Prerequisites
+### ✅ Prerequisites
 
 - Node.js (v14 or higher)
 - npm or yarn
 - Google Gemini API key
 
-### Installation
+### 📦 Installation
 
 1. Clone the repository:
    ```
-   git clone https://github.com/your-username/ai-news-platform.git
-   cd ai-news-platform
+   git clone https://github.com/EcstaticFly/NewsHub.git
+   cd NewsHub
    ```
 
 2. Install dependencies for both frontend and backend:
@@ -62,10 +72,16 @@ news-platform/
    npm install
    ```
 
-3. Create a `.env` file in the server directory with your Gemini API key:
+3. Create `.env` files in the server and client Directories:
    ```
+   //For server
    PORT=5000
    GEMINI_API_KEY=your_gemini_api_key
+   MONGODB_URI=your_mongodb_connection_string
+   CLIENT_URL=your_frontend_url
+
+   //For client
+   VITE_API_URL=http://localhost:5000
    ```
 
 4. Start the development servers:
@@ -74,27 +90,28 @@ news-platform/
    npm run dev
    
    # In a new terminal, start frontend (from client directory)
-   npm start
+   npm run dev
    ```
 
 5. Access the application:
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:5000/api
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:5000
 
-## API Endpoints
+## 🔍 API Endpoints
 
 - `GET /api/articles` - Get all articles
 - `GET /api/articles/:id` - Get a specific article
 - `GET /api/articles/:id/summary` - Get AI-generated summary for an article
-- `POST /api/articles` - Create a new article (admin only)
-- `PUT /api/articles/:id` - Update an article (admin only)
-- `DELETE /api/articles/:id` - Delete an article (admin only)
+- `POST /api/admin/articles` - Create a new article (admin only)
+- `PUT /api/admin/articles/:id` - Update an article (admin only)
+- `DELETE /api/admin/articles/:id` - Delete an article (admin only)
 
-## Deployment
+## 🚀 Deployment
 
-The application is deployed at [your-deployment-url.com](https://your-deployment-url.com)
+🔗 **Live Link:** [NewsHub](https://newshub-iota-vert.vercel.app/)  
+📂 **Source Code:** [GitHub](https://github.com/EcstaticFly/Chatzy.git)
 
-## Development Approach
+## 🧠 Development Approach
 
 I approached this project with a focus on:
 1. Clean architecture with separation of concerns
@@ -104,7 +121,7 @@ I approached this project with a focus on:
 
 For the AI summary generation, I used Google's Gemini API to analyze the article content and generate concise summaries that capture the key points.
 
-## Potential Improvements
+## 🔮 Potential Improvements
 
 - Add user authentication
 - Implement article categorization and filtering
@@ -112,13 +129,18 @@ For the AI summary generation, I used Google's Gemini API to analyze the article
 - Implement caching for API responses
 - Add unit and integration tests
 
-## GPT Tool Usage
+## 🤖 GPT Tool Usage
 
 I used GPT tools for:
-- Initial project structure planning
+- Getting AI generated summaries
 - Debugging complex React component interactions
-- Optimizing the API integration with Gemini
 
-## License
+## 🤝 Contributing  
+Contributions, issues, and feature requests are welcome!  
+Feel free to **fork** the repo and submit a **pull request**.  
 
-This project is licensed under the MIT License - see the LICENSE file for details.# NewsHub
+## 📜 License  
+This project is licensed under the **GNU GENERAL PUBLIC LICENSE v3**.
+
+## 📬 Contact
+For inquiries, reach out to me at [Suyash Pandey](mailto:suyash.2023ug1100@iiitranchi.ac.in).
