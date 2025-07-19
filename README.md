@@ -74,13 +74,13 @@ NewsHub/
 
 3. Create `.env` files in the server and client Directories:
    ```
-   //For server
+   # For server
    PORT=5000
    GEMINI_API_KEY=your_gemini_api_key
    MONGODB_URI=your_mongodb_connection_string
    CLIENT_URL=your_frontend_url
 
-   //For client
+   # For client
    VITE_API_URL=http://localhost:5000
    ```
 
